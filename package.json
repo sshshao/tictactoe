@@ -1,0 +1,26 @@
+{
+  "name": "tictactoe",
+  "version": "1.0.0",
+  "description": "A sample web tic-tac-toe game",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sshshao/tictactoe.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sshshao/tictactoe/issues"
+  },
+  "homepage": "https://github.com/sshshao/tictactoe#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "bootstrap": "^4.0.0",
+    "express": "^4.16.2",
+    "jquery": "^3.3.1"
+  }
+}
