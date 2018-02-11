@@ -7,6 +7,7 @@ body {
   min-height: 75rem;
 }
 
+/*
 .welcome-message {
   display: none;
 }
@@ -14,6 +15,7 @@ body {
 .game-playarea {
   display: none;
 }
+*/
 
 .game-grid {
   width: 100px;

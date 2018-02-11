@@ -1,3 +1,4 @@
+/*
 $(document).ready(function() {
 	$('.welcome-btn').click(function() {
 		$.ajax({
@@ -18,6 +19,7 @@ $(document).ready(function() {
 		});
 	});
 });
+*/
 
 $(document).ready(function() {
 	$('.game-grid').click(function(event) {

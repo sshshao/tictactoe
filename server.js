@@ -1,7 +1,8 @@
-var http = require('http');
-var express = require('express');
-var path = require('path');
-var bodyParser = require('body-parser');
+const http = require('http');
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+const fs = require('fs');
 
 global.appRoot = path.resolve(__dirname);
 
@@ -30,8 +31,17 @@ http.createServer(app).listen(8080);
 router.get('/', function(req, res) {
 	res.sendFile(path.join(__dirname + '/public/index.html'));
 });
-router.post('/', player.showPlayer);
+router.post('/', function(req, res) {
+	var name = req.body.name;
+	var d = new Date();
+	var page = fs.readFileSync(path.join(__dirname + '/public/game.html'), 'utf8');
+	page = page.replace('$name', name);
+	page = page.replace('$date', d);
+	fs.writeFileSync(path.join(__dirname + '/public/temp.html'), page, 'utf8');
+
+	res.sendFile(path.join(__dirname + '/public/temp.html'));
+});
 router.post('/play', game.nextMove);
 
 app.use('/ttt', router);
-app.listen(5000);
+app.listen(3000);
