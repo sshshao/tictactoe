@@ -2,7 +2,15 @@ html {
   position: relative;
   min-height: 100%;
 }
+
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+  min-height: 75rem;
+}
+
+.welcome-message {
+  display: none;
+}
+
+.game-playarea {
+  display: none;
 }

@@ -1,21 +1,20 @@
 $(document).ready(function() {
-	$.ajax({
-		url: "http://127.0.0.1:8080/ttt"
-	}).then(function(data) {
-		//hide input form, show welcome message and game board
-		$('.welcome-form').hide();
+	$('.welcome-btn').click(function() {
+		$.ajax({
+			type: 'POST',
+			url: '/ttt',
+			dataType: 'json',
+			data: $('#welcomeInputName').serialize(),
+			success: function(res) {
+				var d = new Date($.now());
 
-		$('.welcome-message')
-			.show()
-			.append(data.name + ", ")
-			.append(new Date($.now()));
-		$('.game-playarea').show();
-	});
-});
-
-$(document).ready(function() {
-	$('.test').click(function() {
-		console.log("clicked");
-		$('.test').hide();
+				//hide input form, show welcome message and game board
+				$('.welcome-form').hide();
+				$('#welcome-msg-box').text('Hello, ' + res.name + ', ' 
+					+ d.getMonth() + "/" + d.getDate() + " " + d.getHours() + ":" + d.getMinutes());
+				$('.welcome-msg').show();
+				$('.game-playarea').show();
+			}
+		});
 	});
 });

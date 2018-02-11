@@ -5,7 +5,7 @@ exports.showPlayer = function(req, res) {
 	player = req.body.name;
 
 	res.send({
-		"code": 400,
+		"code": 200,
 		"name": player
 	});
 }
