@@ -33,5 +33,5 @@ router.get('/', function(req, res) {
 router.post('/', player.showPlayer);
 router.post('/play', game.nextMove);
 
-app.use('/', router);
+app.use('/ttt', router);
 app.listen(5000);

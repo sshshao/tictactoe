@@ -40,11 +40,11 @@ $(document).ready(function() {
 					}
 				}
 
-				if(res.winner == 1) {
+				if(res.winner == 'X') {
 					$('.game-result-msg').text("You won!");
 					$('.game-result-msg').attr('result', '1');
 				}
-				else if(res.winner == 2) {
+				else if(res.winner == 'O') {
 					$('.game-result-msg').text("You lost!");
 					$('.game-result-msg').attr('result', '2');
 				}
