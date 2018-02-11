@@ -31,6 +31,7 @@ router.get('/', function(req, res) {
 	res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 router.post('/', player.showPlayer);
+router.post('/play', game.nextMove);
 
 app.use('/ttt', router);
 app.listen(5000);

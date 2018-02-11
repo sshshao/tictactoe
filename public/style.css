@@ -14,3 +14,15 @@ body {
 .game-playarea {
   display: none;
 }
+
+.game-grid {
+  width: 100px;
+  height: 100px;
+  border: 4px solid #adadad;
+  padding: 20px;
+  text-align: center;
+}
+
+.game-grid:hover {
+  background-color: #f2f2f2;
+}
