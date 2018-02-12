@@ -24,7 +24,7 @@ $(document).ready(function() {
 $(document).ready(function() {
 	$('.game-grid').click(function(event) {
 		if($(this).text() != ' ')	return;
-		if($('.game-result-msg').attr('result') != '0')	return;
+		if($('.game-result-msg').attr('result') != '-1')	return;
 
 		$(this).text('X');
 		var grid = createDataPacket();
@@ -33,7 +33,7 @@ $(document).ready(function() {
 			type: 'POST',
 			url: '/ttt/play',
 			dataType: 'json',
-			data: {'grid': grid},
+			data: {'grid': grid, 'last_move': $(this).attr('grid-index')},
 			success: function(res) {
 				for(var i = 0; i < 9; i++) {
 					if(res.grid[i] != ' ') {
@@ -50,6 +50,10 @@ $(document).ready(function() {
 				else if(res.winner == 'O') {
 					$('.game-result-msg').text("You lost!");
 					$('.game-result-msg').attr('result', '2');
+				}
+				else if(res.winner == ' ') {
+					$('.game-result-msg').text("Draw!");
+					$('.game-result-msg').attr('result', '0');
 				}
 			}
 		});
