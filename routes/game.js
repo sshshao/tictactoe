@@ -83,20 +83,13 @@ function criticalMove(grid) {
 }
 
 function randomMove(grid) {
-	var pos;
-	var i = 0;
-
-	do {
-		pos = Math.floor(Math.random()*10);
-		i++;
-	} while(grid[pos] != ' ' && i < 20);
-
-	if(i <= 19)	{
-		return pos;
+	for(var i = 0; i < 9; i++) {
+		if(grid[i] == ' ') {
+			return i;
+		}
 	}
-	else {
-		return -1;
-	}
+
+	return -1;
 }
 
 function checkWinner(grid, last_move) {
@@ -184,7 +177,7 @@ function checkWinner(grid, last_move) {
 
 function checkDeadGame(grid) {
 	var empties = [];
-	
+
 	for(var i=0; i<9; i++) {
 		if(grid[i] == ' ') {
 			empties.push(i);
