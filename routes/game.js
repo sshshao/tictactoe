@@ -14,11 +14,19 @@ exports.nextMove = function(req, res) {
 		var winner = checkWinner(grid);
 
 		//winner: ' '=none, 'X'=player, 'O'=computer
-		res.send({
-			'code': 200,
-			'grid': grid,
-			'winner': winner
-		});
+		if(winner == ' ') {
+			res.send({
+				'code': 200,
+				'grid': grid,
+			});
+		}
+		else {
+			res.send({
+				'code': 200,
+				'grid': grid,
+				'winner': winner
+			});
+		}
 	}
 }
 
