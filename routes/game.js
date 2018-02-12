@@ -8,10 +8,12 @@ exports.nextMove = function(req, res) {
 
 		//computer move
 		var pos;
+		var i = 0;
 		do {
 			pos = Math.floor(Math.random()*10);
-		} while(grid[pos] != ' ');
-		grid[pos] = 'O';
+			i++;
+		} while(grid[pos] != ' ' && i < 10);
+		if(i <= 9)	grid[pos] = 'O';
 
 		var winner = checkWinner(grid);
 
