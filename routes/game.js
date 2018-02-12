@@ -5,12 +5,14 @@ exports.nextMove = function(req, res) {
 
 	if(req.body.grid) {
 		grid = req.body.grid;
-		for(var i = 0; i < 9; i++) {
-			if(grid[i] == ' ') {
-				grid[i] = 'O';
-				break;
-			}
-		}
+
+		//computer move
+		var pos;
+		do {
+			pos = Math.floor(Math.random()*10);
+		} while(grid[pos] != ' ');
+		grid[pos] = 'O';
+
 		var winner = checkWinner(grid);
 
 		//winner: ' '=none, 'X'=player, 'O'=computer
@@ -31,61 +33,50 @@ exports.nextMove = function(req, res) {
 }
 
 function checkWinner(grid) {
-	for(var i = 0; i < 7; i++) {
-		if(i == 0) {
-			if((grid[i] == grid[i+1] && grid[i+1] == grid[i+2])
-				|| (grid[i] == grid[i+3] && grid[i+3] == grid[i+6])
-				|| (grid[i] == grid[i+4] && grid[i+4] == grid[i+8])) {
-				if(grid[i] == 'X') {
-					return 'X';
-				}
-				if(grid[i] == 'O') {
-					return 'O';
+	var symbol = ['X', 'O'];
+
+	for(var i = 0; i < symbol.length; i++) {
+		for(var j = 0; j < 7; j++) {
+			if(j == 0) {
+				if((grid[j] == grid[j+1] && grid[j+1] == grid[j+2])
+					|| (grid[j] == grid[j+3] && grid[j+3] == grid[j+6])
+					|| (grid[j] == grid[j+4] && grid[j+4] == grid[j+8])) {
+					if(grid[j] == symbol[i]) {
+						return symbol[i];
+					}
 				}
 			}
-		}
-
-		if(i == 1) {
-			if(grid[i] == grid[i+3] && grid[i+3] == grid[i+6]) {
-				if(grid[i] == 'X') {
-					return 'X';
-				}
-				if(grid[i] == 'O') {
-					return 'O';
+	
+			if(j == 1) {
+				if(grid[j] == grid[j+3] && grid[j+3] == grid[j+6]) {
+					if(grid[j] == symbol[i]) {
+						return symbol[i];
+					}
 				}
 			}
-		}
-
-		if(i == 2) {
-			if((grid[i] == grid[i+2] && grid[i+2] == grid[i+4])
-				|| (grid[i] == grid[i+3] && grid[i+3] == grid[i+6])) {
-				if(grid[i] == 'X') {
-					return 'X';
-				}
-				if(grid[i] == 'O') {
-					return 'O';
+	
+			if(j == 2) {
+				if((grid[j] == grid[j+2] && grid[j+2] == grid[j+4])
+					|| (grid[j] == grid[j+3] && grid[j+3] == grid[j+6])) {
+					if(grid[j] == symbol[i]) {
+						return symbol[i];
+					}
 				}
 			}
-		}
-
-		if(i == 3) {
-			if(grid[i] == grid[i+1] && grid[i+1] == grid[i+2]) {
-				if(grid[i] == 'X') {
-					return 'X';
-				}
-				if(grid[i] == 'O') {
-					return 'O';
+	
+			if(j == 3) {
+				if(grid[j] == grid[j+1] && grid[j+1] == grid[j+2]) {
+					if(grid[j] == symbol[i]) {
+						return symbol[i];
+					}
 				}
 			}
-		}
-
-		if(i == 6) {
-			if(grid[i] == grid[i+1] && grid[i+1] == grid[i+2]) {
-				if(grid[i] == 'X') {
-					return 'X';
-				}
-				if(grid[i] == 'O') {
-					return 'O';
+	
+			if(j == 6) {
+				if(grid[j] == grid[j+1] && grid[j+1] == grid[j+2]) {
+					if(grid[j] == symbol[i]) {
+						return symbol[i];
+					}
 				}
 			}
 		}

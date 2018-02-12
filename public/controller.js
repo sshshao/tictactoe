@@ -24,7 +24,6 @@ $(document).ready(function() {
 $(document).ready(function() {
 	$('.game-grid').click(function(event) {
 		if($(this).text() != ' ')	return;
-		console.log($('.game-result-msg').attr('result'));
 		if($('.game-result-msg').attr('result') != '0')	return;
 
 		$(this).text('X');
@@ -41,6 +40,8 @@ $(document).ready(function() {
 						$('#game-grid-'+i).text(res.grid[i]);
 					}
 				}
+
+				console.log(res.winner);
 
 				if(res.winner == 'X') {
 					$('.game-result-msg').text("You won!");
