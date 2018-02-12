@@ -1,7 +1,7 @@
 var path = require('path');
 
 exports.nextMove = function(req, res) {
-	var grid;
+	var grid = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
 	var last_move;
 	var winner = '/';
 
@@ -54,7 +54,8 @@ exports.nextMove = function(req, res) {
 	}
 	else {
 		res.send({
-			'code': 203
+			'code': 200,
+			'grid': grid
 		});
 	}
 }
