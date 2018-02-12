@@ -1,16 +1,14 @@
 var path = require('path');
 
 exports.nextMove = function(req, res) {
-	var grid = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '];
-	var last_move;
+	var grid = req.body.grid;
 	var winner = '/';
 
-	if(req.body.grid && req.body.last_move) {
+	if(req.body.grid) {
 		grid = req.body.grid;
-		last_move = parseInt(req.body.last_move);
 
 		//check if player wins
-		winner = checkWinner(grid, last_move);
+		winner = checkWinner(grid);
 		if(winner == 'X') {
 			sendExternalResult(res, grid, winner);
 			return;
@@ -105,83 +103,47 @@ function randomMove(grid) {
 	return -1;
 }
 
-function checkWinner(grid, last_move) {
+function checkWinner(grid) {
 	//check for wins
-	var lmr = Math.floor(last_move/3);		//last_move_row
-	var lmc = Math.floor(last_move%3);		//last_move_col
 	var board = toGameBoard(grid);
 
-	//check for vertical grids
-	if(lmr == 0) {
-		if(board[lmr][lmc] == board[lmr+1][lmc] 
-			&& board[lmr][lmc] == board[lmr+2][lmc]) {
-			return board[lmr][lmc];
+	for(var i = 0; i < 7; i++) {
+		if(i == 0) {
+			if((grid[i] == grid[i+1] && grid[i+1] == grid[i+2])
+				|| (grid[i] == grid[i+3] && grid[i+3] == grid[i+6])
+				|| (grid[i] == grid[i+4] && grid[i+4] == grid[i+8])) {
+				if(grid[i] == 'X')	return 'X';
+				if(grid[i] == 'O') 	return 'O';
+			}
 		}
-	}
-	if(lmr == 1) {
-		if(board[lmr][lmc] == board[lmr-1][lmc]
-			&& board[lmr][lmc] == board[lmr+1][lmc]) {
-			return board[lmr][lmc];
+
+		if(i == 1) {
+			if(grid[i] == grid[i+3] && grid[i+3] == grid[i+6]) {
+				if(grid[i] == 'X')	return 'X';
+				if(grid[i] == 'O') 	return 'O';
+			}
 		}
-	}
-	if(lmr == 2) {
-		if(board[lmr][lmc] == board[lmr-1][lmc]
-			&& board[lmr][lmc] == board[lmr-2][lmc]) {
-			return board[lmr][lmc];
+
+		if(i == 2) {
+			if((grid[i] == grid[i+2] && grid[i+2] == grid[i+4])
+				|| (grid[i] == grid[i+3] && grid[i+3] == grid[i+6])) {
+				if(grid[i] == 'X')	return 'X';
+				if(grid[i] == 'O') 	return 'O';
+			}
 		}
-	}
-	//check for horizontal grids
-	if(lmc == 0) {
-		if(board[lmr][lmc] == board[lmr][lmc+1] 
-			&& board[lmr][lmc] == board[lmr][lmc+2]) {
-			return board[lmr][lmc];
+
+		if(i == 3) {
+			if(grid[i] == grid[i+1] && grid[i+1] == grid[i+2]) {
+				if(grid[i] == 'X')	return 'X';
+				if(grid[i] == 'O') 	return 'O';
+			}
 		}
-	}
-	if(lmc == 1) {
-		if(board[lmr][lmc] == board[lmr][lmc-1]
-			&& board[lmr][lmc] == board[lmr][lmc+1]) {
-			return board[lmr][lmc];
-		}
-	}
-	if(lmc == 2) {
-		if(board[lmr][lmc] == board[lmr][lmc-1]
-			&& board[lmr][lmc] == board[lmr][lmc-2]) {
-			return board[lmr][lmc];
-		}
-	}
-	//check for slopes
-	if(lmr == 0 && lmc == 0) {
-		if(board[lmr][lmc] == board[lmr+1][lmc+1]
-			&& board[lmr][lmc] == board[lmr+2][lmc+2]) {
-			return board[lmr][lmc];
-		}
-	}
-	if(lmr == 1 && lmc == 1) {
-		if(board[lmr][lmc] == board[lmr-1][lmc-1]
-			&& board[lmr][lmc] == board[lmr+1][lmc+1]) {
-			return board[lmr][lmc];
-		}
-		if(board[lmr][lmc] == board[lmr-1][lmc+1]
-			&& board[lmr][lmc] == board[lmr+1][lmc-1]) {
-			return board[lmr][lmc];
-		}
-	}
-	if(lmr == 2 && lmc == 2) {
-		if(board[lmr][lmc] == board[lmr-1][lmc-1]
-			&& board[lmr][lmc] == board[lmr-2][lmc-2]) {
-			return board[lmr][lmc];
-		}
-	}
-	if(lmr == 0 && lmc == 2) {
-		if(board[lmr][lmc] == board[lmr+1][lmc-1]
-			&& board[lmr][lmc] == board[lmr+2][lmc-2]) {
-			return board[lmr][lmc];
-		}
-	}
-	if(lmr == 2 && lmc == 0) {
-		if(board[lmr][lmc] == board[lmr-1][lmc+1]
-			&& board[lmr][lmc] == board[lmr-2][lmc+2]) {
-			return board[lmr][lmc];
+
+		if(i == 6) {
+			if(grid[i] == grid[i+1] && grid[i+1] == grid[i+2]) {
+				if(grid[i] == 'X')	return 'X';
+				if(grid[i] == 'O') 	return 'O';
+			}
 		}
 	}
 
