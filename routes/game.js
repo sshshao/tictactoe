@@ -161,7 +161,7 @@ function isDeadGame(grid) {
 		}
 	}
 
-	if(empties.length < 3) {
+	if(empties.length < 2) {
 		for(var i=0; i<empties.length; i++) {
 			if(checkConsecutive(grid, empties[i]) != -1) {
 				return false;
