@@ -3,7 +3,7 @@ var path = require('path');
 exports.nextMove = function(req, res) {
 	var grid;
 	var last_move;
-	var winner;
+	var winner = '/';
 
 	if(req.body.grid && req.body.last_move) {
 		grid = req.body.grid;
@@ -17,7 +17,7 @@ exports.nextMove = function(req, res) {
 		}
 
 		//draw if is a dead game
-		if(checkDeadGame(grid)) {
+		if(isDeadGame(grid)) {
 			winner = ' ';
 			sendExternalResult(res, grid, winner);
 			return;
@@ -34,8 +34,15 @@ exports.nextMove = function(req, res) {
 
 		winner = checkWinner(grid, com_move);
 
-		//winner: ' '=draw, 'X'=player, 'O'=computer
-		if(winner == ' ') {
+		//draw if is a dead game
+		if(isDeadGame(grid)) {
+			winner = ' ';
+			sendExternalResult(res, grid, winner);
+			return;
+		}
+
+		//winner: ' '=draw, 'X'=player, 'O'=computer, '/'=none
+		if(winner == '/') {
 			res.send({
 				'code': 200,
 				'grid': grid,
@@ -44,6 +51,11 @@ exports.nextMove = function(req, res) {
 		else {
 			sendExternalResult(res, grid, winner);
 		}
+	}
+	else {
+		res.send({
+			'code': 203
+		});
 	}
 }
 
@@ -66,14 +78,14 @@ function criticalMove(grid) {
 	}
 
 	for(var i=0; i<empties.length; i++) {
-		var index = checkConsecutive(grid, empties[i], 'O');
+		var index = checkConsecutiveTarget(grid, empties[i], 'O');
 		if(index != -1) {
 			return index;
 		}
 	}
 
 	for(var i=0; i<empties.length; i++) {
-		var index = checkConsecutive(grid, empties[i], 'X');
+		var index = checkConsecutiveTarget(grid, empties[i], 'X');
 		if(index != -1) {
 			return index;
 		}
@@ -172,10 +184,10 @@ function checkWinner(grid, last_move) {
 		}
 	}
 
-	return;
+	return '/';
 }
 
-function checkDeadGame(grid) {
+function isDeadGame(grid) {
 	var empties = [];
 
 	for(var i=0; i<9; i++) {
@@ -186,10 +198,11 @@ function checkDeadGame(grid) {
 
 	if(empties.length < 3) {
 		for(var i=0; i<empties.length; i++) {
-			if(checkConsecutive(grid, empties[i]) == -1) {
-				return true;
+			if(checkConsecutive(grid, empties[i]) != -1) {
+				return false;
 			}
 		}
+		return true;
 	}
 
 	return false;
@@ -199,6 +212,8 @@ function checkConsecutive(grid, index) {
 	var row = Math.floor(index/3);
 	var col = Math.floor(index%3);
 	var board = toGameBoard(grid);
+
+	console.log(row + ", " + col);
 
 	//check for vertical grids
 	if(row == 0) {
@@ -265,7 +280,7 @@ function checkConsecutive(grid, index) {
 	return -1;
 }
 
-function checkConsecutive(grid, index, symbol) {
+function checkConsecutiveTarget(grid, index, symbol) {
 	var row = Math.floor(index/3);
 	var col = Math.floor(index%3);
 	var board = toGameBoard(grid);
