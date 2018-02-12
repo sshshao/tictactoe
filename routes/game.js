@@ -32,12 +32,14 @@ exports.nextMove = function(req, res) {
 
 		winner = checkWinner(grid, com_move);
 
+		/*
 		//draw if is a dead game
 		if(isDeadGame(grid)) {
 			winner = ' ';
 			sendExternalResult(res, grid, winner);
 			return;
 		}
+		*/
 
 		//winner: ' '=draw, 'X'=player, 'O'=computer, '/'=none
 		if(winner == '/') {
