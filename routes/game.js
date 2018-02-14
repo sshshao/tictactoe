@@ -96,13 +96,20 @@ function criticalMove(grid) {
 }
 
 function randomMove(grid) {
+	var empties = [];
+
 	for(var i = 0; i < 9; i++) {
 		if(grid[i] == ' ') {
-			return i;
+			empties.push(i);
 		}
 	}
 
-	return -1;
+	if(empties.length < 1) {
+		return -1;
+	}
+	else {
+		return empties[Math.floor(Math.random()*empties.length)];
+	}
 }
 
 function checkWinner(grid) {
