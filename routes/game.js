@@ -7,17 +7,15 @@ exports.nextMove = function(req, res) {
 	if(req.body.grid) {
 		grid = req.body.grid;
 
-		//check if player wins
-		winner = checkWinner(grid);
-		if(winner == 'X') {
-			sendExternalResult(res, grid, winner);
+		//check result first, return if player wins
+		if(checkWinner(grid) == 'X') {
+			sendExternalResult(res, 'OK', grid, 'X');
 			return;
 		}
 
 		//draw if is a dead game
 		if(isDeadGame(grid)) {
-			winner = ' ';
-			sendExternalResult(res, grid, winner);
+			sendExternalResult(res, 'OK', grid, ' ');
 			return;
 		}
 
@@ -44,29 +42,47 @@ exports.nextMove = function(req, res) {
 		//winner: ' '=draw, 'X'=player, 'O'=computer, '/'=none
 		if(winner == '/') {
 			res.send({
-				'code': 200,
+				'status': 'OK',
 				'grid': grid,
 			});
 		}
 		else {
-			sendExternalResult(res, grid, winner);
+			sendExternalResult(res, 'OK', grid, winner);
 		}
 	}
 	else {
 		res.send({
-			'code': 200,
+			'status': 'OK',
 			'grid': grid
 		});
 	}
 }
 
-function sendExternalResult(res, grid, winner) {
+
+exports.listGames = function(res, req) {
+	var grid = req.body.grid;
+	var move = req.body.move;
+}
+
+
+exports.getGame = function(res, req) {
+	var game_id = req.body.id;
+}
+
+
+exports.getScore = function(res, req) {
+	
+}
+ 
+
+function sendExternalResult(res, status, grid, winner) {
 	res.send({
-		'code': 200,
+		'status': status,
 		'grid': grid,
 		'winner': winner
 	});
 }
+
 
 function criticalMove(grid) {
 	//check if any match point exists
@@ -95,6 +111,7 @@ function criticalMove(grid) {
 	return -1;
 }
 
+
 function randomMove(grid) {
 	var empties = [];
 
@@ -111,6 +128,7 @@ function randomMove(grid) {
 		return empties[Math.floor(Math.random()*empties.length)];
 	}
 }
+
 
 function checkWinner(grid) {
 	//check for wins
@@ -159,6 +177,7 @@ function checkWinner(grid) {
 	return '/';
 }
 
+
 function isDeadGame(grid) {
 	var empties = [];
 
@@ -182,6 +201,7 @@ function isDeadGame(grid) {
 
 	return false;
 }
+
 
 function checkConsecutive(grid, index) {
 	var row = Math.floor(index/3);
@@ -255,6 +275,7 @@ function checkConsecutive(grid, index) {
 	return -1;
 }
 
+
 function checkConsecutiveTarget(grid, index, symbol) {
 	var row = Math.floor(index/3);
 	var col = Math.floor(index%3);
@@ -324,6 +345,7 @@ function checkConsecutiveTarget(grid, index, symbol) {
 
 	return -1;
 }
+
 
 function toGameBoard(grid) {
 	var board = [

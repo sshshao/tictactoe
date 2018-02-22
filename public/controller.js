@@ -33,7 +33,7 @@ $(document).ready(function() {
 			type: 'POST',
 			url: '/ttt/play',
 			dataType: 'json',
-			data: {'grid': grid, 'last_move': $(this).attr('grid-index')},
+			data: {'grid': grid, 'move': $(this).attr('grid-index')},
 			success: function(res) {
 				for(var i = 0; i < 9; i++) {
 					if(res.grid[i] != ' ') {
