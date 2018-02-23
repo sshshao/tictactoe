@@ -58,7 +58,21 @@ $(document).ready(function() {
 			}
 		});
 	});
+
+
+	
+
+	
 });
+
+
+function sign_in() {
+	$('#overlay-signin').css('display', 'block');
+}
+
+function sign_up() {
+	$('#overlay-signup').css('display', 'block');
+}
 
 function createDataPacket() {
 	var grid = [];
@@ -67,4 +81,10 @@ function createDataPacket() {
 	}
 
 	return grid;
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+        $('#overlay-signin').css('display', 'none');
+    }
 }
