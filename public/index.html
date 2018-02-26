@@ -39,6 +39,9 @@
             <a class="nav-link" href="#" id="navbar-btn-signin" onclick="sign_in()">Sign in</a>
             <span class="text-grey">or</span>
             <a class="nav-link" href="#" id="navbar-btn-signup" onclick="sign_up()">Sign up</a>
+            <form action="/logout" method="post">
+              <button type="submit" class="nav-btn-link">Log out</button>
+            </form>
         </div>
           
         <!--
@@ -86,7 +89,7 @@
     </main>
 
     <div id="overlay-signin" class="modal">
-      <form class="modal-content animate" action="/action_page.php" method="post">
+      <form class="modal-content animate" action="/login" method="post">
         <div class="container">
           <h4>Sign in</h4>
           <div class="form-group">
@@ -101,7 +104,7 @@
     </div>
 
     <div id="overlay-signup" class="modal">
-      <form class="modal-content animate" action="/action_page.php" method="post">
+      <form class="modal-content animate" action="/adduser" method="post">
         <div class="container">
           <h4>Sign up</h4>
           <div class="form-group">

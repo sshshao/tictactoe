@@ -18,6 +18,21 @@ body {
   padding: .5rem;
 }
 
+.nav-btn-link{
+  color: rgba(255,255,255,.5);
+  padding-right: .5rem;
+  padding-left: .5rem;
+  display: block;
+  padding: .5rem 1rem;
+  text-decoration: none;
+  background-color: transparent;
+  box-sizing: border-box;
+  cursor: pointer;
+  -webkit-box-direction: normal;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+
 .container {
   padding: 16px;
 }

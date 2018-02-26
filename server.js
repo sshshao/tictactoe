@@ -52,6 +52,7 @@ router.post('/', function(req, res) {
 });
 
 router.post('/adduser', account.register);
+router.get('/verify', account.verify);
 router.post('/verify', account.verify);
 router.post('/login', account.login);
 router.post('/logout', account.logout);
