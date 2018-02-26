@@ -30,12 +30,14 @@ window.onclick = function(event) {
 }
 
 $(document).ready(function() {
+	$('#navbar-btn-signout').hide();
+
 	$('.game-grid').click(function(event) {
 		if($(this).text() != ' ')	return;
 		if($('.game-result-msg').attr('result') != '-1')	return;
 
 		$(this).text('X');
-		var grid = createDataPacket();
+		var grid = createGridPacket();
 
 		$.ajax({
 			type: 'POST',
@@ -66,23 +68,92 @@ $(document).ready(function() {
 			}
 		});
 	});
-
-
-	
-
-	
 });
 
 
-function sign_in() {
+function open_sign_in() {
 	$('#overlay-signin').css('display', 'block');
 }
 
-function sign_up() {
+function open_sign_up() {
 	$('#overlay-signup').css('display', 'block');
 }
 
-function createDataPacket() {
+function sign_in() {
+	console.log("SIGN IN");
+	if($('#signin-username').val() == "" || $('#signin-pw').val() == "") {
+		console.log("NOT VALID");
+		return;
+	}
+	var account = createSigninPacket();
+
+	$.ajax({
+		type: 'POST',
+		url: '/ttt/login',
+		dataType: 'json',
+		data: account,
+		success: function(res) {
+			$('.navbar-btn-signout').show();
+			$('.navbar-btn-signin').hide();
+			$('.navbar-btn-signup').hide();
+		}
+	});
+}
+
+function sign_up() {
+	if($('#signup-username').val() == "" || $('#signup-email').val() == "" 
+		|| $('#signup-pw').val() == "") {
+		return;
+	}
+	var account = createSignupPacket();
+
+	$.ajax({
+		type: 'POST',
+		url: '/ttt/adduser',
+		dataType: 'json',
+		data: account,
+		success: function(res) {
+			$('#navbar-btn-signout').show();
+			$('#navbar-btn-signin').hide();
+			$('#navbar-btn-signup').hide();
+		}
+	});
+}
+
+function sign_out() {
+	console.log("SIGN OUT");
+	$.ajax({
+		type: 'POST',
+		url: '/ttt/logout',
+		dataType: 'json',
+		success: function(res) {
+			$('#navbar-btn-signin').show();
+			$('#navbar-btn-signup').show();
+			$('#navbar-btn-signout').hide();
+		}
+	});
+}
+
+function createSigninPacket() {
+	var data = {
+		'username': $('#signin-username').text(),
+		'password': $('#signin-pw').text()
+	};
+	
+	return data;
+}
+
+function createSignupPacket() {
+	var data = {
+		'username': $('#signup-username').val(),
+		'email': $('#signup-email').val(),
+		'password': $('#signup-pw').val()
+	};
+	
+	return data;
+}
+
+function createGridPacket() {
 	var grid = [];
 	for(var i = 0; i < 9; i++) {
 		grid.push($('#game-grid-'+i).text());
