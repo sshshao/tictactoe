@@ -21,6 +21,14 @@ $(document).ready(function() {
 });
 */
 
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+	if (event.target == document.getElementById('overlay-signin') 
+		|| event.target == document.getElementById('overlay-signup')) {
+        event.target.style.display = "none";
+    }
+}
+
 $(document).ready(function() {
 	$('.game-grid').click(function(event) {
 		if($(this).text() != ' ')	return;
@@ -81,10 +89,4 @@ function createDataPacket() {
 	}
 
 	return grid;
-}
-
-window.onclick = function(event) {
-    if (event.target == modal) {
-        $('#overlay-signin').css('display', 'none');
-    }
 }

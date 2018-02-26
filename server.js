@@ -10,6 +10,7 @@ global.appRoot = path.resolve(__dirname);
 var router = express.Router();
 var account = require('./routes/account');
 var game = require('./routes/game');
+var play = require('./routes/play');
 
 var app = express();
 console.log("Server running at http://127.0.0.1:8080/");
@@ -55,7 +56,7 @@ router.post('/verify', account.verify);
 router.post('/login', account.login);
 router.post('/logout', account.logout);
 
-router.post('/play', game.nextMove);
+router.post('/play', play.nextMove);
 
 router.post('/listgames', game.listGames);
 router.post('/getgame', game.getGame);
