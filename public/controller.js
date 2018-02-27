@@ -31,6 +31,7 @@ window.onclick = function(event) {
 
 $(document).ready(function() {
 	$('#navbar-btn-signout').hide();
+	$('.game-playarea').hide();
 
 	$('.game-grid').click(function(event) {
 		if($(this).text() != ' ')	return;
@@ -93,10 +94,14 @@ function sign_in() {
 		dataType: 'json',
 		data: account,
 		success: function(res) {
-			$('.navbar-btn-signout').show();
-			$('.navbar-btn-signin').hide();
+			$('#navbar-btn-signout').show();
+			$('#navbar-btn-signin').hide();
 			$('#nav-span-or').hide();
-			$('.navbar-btn-signup').hide();
+			$('#navbar-btn-signup').hide();
+			$('#overlay-signin').css('display', 'none');
+
+			$('.entrance-msg').hide();
+			$('.game-playarea').show();
 		}
 	});
 }
@@ -118,6 +123,7 @@ function sign_up() {
 			$('#navbar-btn-signin').hide();
 			$('#nav-span-or').hide();
 			$('#navbar-btn-signup').hide();
+			$('#overlay-signup').css('display', 'none');
 		}
 	});
 }

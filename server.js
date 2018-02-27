@@ -40,6 +40,7 @@ http.createServer(app).listen(8080);
 router.get('/', function(req, res) {
 	res.sendFile(path.join(__dirname + '/public/index.html'));
 });
+/*
 router.post('/', function(req, res) {
 	var name = req.body.name;
 	var d = new Date();
@@ -50,6 +51,7 @@ router.post('/', function(req, res) {
 
 	res.sendFile(path.join(__dirname + '/public/temp.html'));
 });
+*/
 
 router.post('/adduser', account.register);
 router.get('/verify', account.verify);
