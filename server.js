@@ -40,6 +40,9 @@ http.createServer(app).listen(8080);
 router.get('/', function(req, res) {
 	res.sendFile(path.join(__dirname + '/public/index.html'));
 });
+router.get('/ttt', function(req, res) {
+	res.sendFile(path.join(__dirname + '/public/index.html'));
+});
 /*
 router.post('/', function(req, res) {
 	var name = req.body.name;
@@ -59,12 +62,12 @@ router.post('/verify', account.verify);
 router.post('/login', account.login);
 router.post('/logout', account.logout);
 
-router.post('/play', play.nextMove);
+router.post('/ttt/play', play.nextMove);
 
 router.post('/listgames', game.listGames);
 router.post('/getgame', game.getGame);
 router.post('/getscore', game.getScore);
 
 
-app.use('/ttt', router);
+app.use('/', router);
 app.listen(5000);

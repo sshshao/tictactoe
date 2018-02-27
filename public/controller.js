@@ -30,8 +30,9 @@ window.onclick = function(event) {
 }
 
 $(document).ready(function() {
-	$('#navbar-btn-signout').hide();
 	$('.game-playarea').hide();
+	$('#navbar-btn-signout').hide();
+	$('.game-result-msg').hide();
 
 	$('.game-grid').click(function(event) {
 		if($(this).text() != ' ')	return;
@@ -42,7 +43,7 @@ $(document).ready(function() {
 
 		$.ajax({
 			type: 'POST',
-			url: '/ttt/play',
+			url: 'ttt/play',
 			dataType: 'json',
 			data: {'grid': grid, 'move': $(this).attr('grid-index')},
 			success: function(res) {
@@ -52,8 +53,7 @@ $(document).ready(function() {
 					}
 				}
 
-				console.log(res.winner);
-
+				$('.game-result-msg').show();
 				if(res.winner == 'X') {
 					$('.game-result-msg').text("You won!");
 					$('.game-result-msg').attr('result', '1');
@@ -90,7 +90,7 @@ function sign_in() {
 
 	$.ajax({
 		type: 'POST',
-		url: '/ttt/login',
+		url: '/login',
 		dataType: 'json',
 		data: account,
 		success: function(res) {
@@ -115,7 +115,7 @@ function sign_up() {
 
 	$.ajax({
 		type: 'POST',
-		url: '/ttt/adduser',
+		url: '/adduser',
 		dataType: 'json',
 		data: account,
 		success: function(res) {
@@ -132,13 +132,17 @@ function sign_out() {
 	console.log("SIGN OUT");
 	$.ajax({
 		type: 'POST',
-		url: '/ttt/logout',
+		url: '/logout',
 		dataType: 'json',
 		success: function(res) {
 			$('#navbar-btn-signin').show();
 			$('#nav-span-or').show();
 			$('#navbar-btn-signup').show();
 			$('#navbar-btn-signout').hide();
+
+			$('.entrance-msg').show();
+			$('.game-playarea').hide();
+			$('.game-result-msg').hide();
 		}
 	});
 }
