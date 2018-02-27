@@ -1,6 +1,6 @@
 const http = require('http');
 const express = require('express');
-const cookie_session = requie('cookie-session');
+const cookie_session = require('cookie-session');
 const path = require('path');
 const bodyParser = require('body-parser');
 const fs = require('fs');

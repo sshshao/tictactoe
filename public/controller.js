@@ -95,6 +95,7 @@ function sign_in() {
 		success: function(res) {
 			$('.navbar-btn-signout').show();
 			$('.navbar-btn-signin').hide();
+			$('#nav-span-or').hide();
 			$('.navbar-btn-signup').hide();
 		}
 	});
@@ -115,6 +116,7 @@ function sign_up() {
 		success: function(res) {
 			$('#navbar-btn-signout').show();
 			$('#navbar-btn-signin').hide();
+			$('#nav-span-or').hide();
 			$('#navbar-btn-signup').hide();
 		}
 	});
@@ -128,6 +130,7 @@ function sign_out() {
 		dataType: 'json',
 		success: function(res) {
 			$('#navbar-btn-signin').show();
+			$('#nav-span-or').show();
 			$('#navbar-btn-signup').show();
 			$('#navbar-btn-signout').hide();
 		}
@@ -136,8 +139,8 @@ function sign_out() {
 
 function createSigninPacket() {
 	var data = {
-		'username': $('#signin-username').text(),
-		'password': $('#signin-pw').text()
+		'username': $('#signin-username').val(),
+		'password': $('#signin-pw').val()
 	};
 	
 	return data;
