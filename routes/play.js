@@ -11,7 +11,10 @@ exports.nextMove = function(req, res) {
 			if(current_game.start_date == null) {
 				current_game.start_date = Date.now();
 			}
+			console.log(JSON.stringify(current_game));
 			current_game.grid[move] = 'X';
+			console.log("human move" + JSON.stringify(current_game));
+
 
 			//check result first, return if player wins
 			if(checkWinner(current_game.grid) == 'X') {
@@ -33,7 +36,8 @@ exports.nextMove = function(req, res) {
 				com_move = randomMove(current_game.grid);
 			}
 			current_game.grid[com_move] = 'O';
-	
+			console.log("com move" + JSON.stringify(current_game));
+
 			winner = checkWinner(current_game.grid, com_move);
 
 			/*
@@ -60,6 +64,8 @@ exports.nextMove = function(req, res) {
 
 function sendMoveResult(req, res, status, game_info, winner) {
 	//winner: ' '=draw, 'X'=player, 'O'=computer, '/'=none
+	console.log("SENDING" + JSON.stringify(game_info));
+
 	if(winner == '/') {
 		game.saveCurrentGame(req.session.user, game_info, function(saved) {
 			if(saved) {
