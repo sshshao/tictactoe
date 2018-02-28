@@ -166,23 +166,38 @@ exports.saveEndedGame = function(user, game, winner, callback) {
         var db = client.db('tictactoe');
 
         var query = { 'username': user };
-        var user_game_update = {
-            'games': [{
-                'start_date': game.start_date,
-                'grid': game.grid,
-                'winner': winner
-            }]
-        }
 
-        db.collection('user').updateOne(query, { $set: current_game_update, $push: user_game_update }, function(err, result) {
+        db.collection('user').findOne(query, function(err, user_result) {
             if(err) {
                 console.log('Unexpected error occurred when saving game of user.');
                 client.close();
                 calback(false);
             }
 
-            client.close();
-            callback(true);
+            if(user_result != null) {
+                var user_game_update = {
+                    'games': [{
+                        'id': user_result.games.length + 1,
+                        'start_date': game.start_date,
+                        'grid': game.grid,
+                        'winner': winner
+                    }]
+                }
+                db.collection('user').updateOne(query, { $set: current_game_update, $push: user_game_update }, function(err, result) {
+                    if(err) {
+                        console.log('Unexpected error occurred when saving game of user.');
+                        client.close();
+                        calback(false);
+                    }
+        
+                    client.close();
+                    callback(true);
+                });
+            }
+            else {
+                client.close();
+                callback(false);
+            }
         });
     });
 }

@@ -5,7 +5,7 @@ exports.nextMove = function(req, res) {
 	var move = req.body.move;
 	var winner = '/';
 	game.getCurrentGame(req.session.user, function(current_game) {
-		if(move && current_game.grid) {
+		if(move && current_game) {
 			//Initialize current game if no on going game exist for the user
 			if(current_game.start_date == null) {
 				current_game.start_date = Date.now();
@@ -64,7 +64,7 @@ function sendMoveResult(req, res, status, game_info, winner) {
 				res.send({
 					'status': status,
 					'grid': game_info.grid,
-					'winner': winner
+					'winner': null
 				});
 			}
 			else {
