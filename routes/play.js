@@ -8,14 +8,12 @@ exports.nextMove = function(req, res) {
 	var winner = '/';
 
 	game.getCurrentGame(req.session.user, function(current_game) {
-		if(move && current_game) {
+		if(move != null && current_game) {
 			//Initialize current game if no on going game exist for the user
 			if(current_game.start_date == null) {
 				current_game.start_date = Date.now();
 			}
-			console.log(JSON.stringify(current_game));
 			current_game.grid[move] = 'X';
-			console.log("human move" + JSON.stringify(current_game));
 
 
 			//check result first, return if player wins
@@ -38,7 +36,6 @@ exports.nextMove = function(req, res) {
 				com_move = randomMove(current_game.grid);
 			}
 			current_game.grid[com_move] = 'O';
-			console.log("com move" + JSON.stringify(current_game));
 
 			winner = checkWinner(current_game.grid, com_move);
 
@@ -53,11 +50,10 @@ exports.nextMove = function(req, res) {
 	
 			sendMoveResult(req, res, 'OK', current_game, winner);
 		}
-		else if(!move && current_game) {
+		else if(move == null && current_game) {
 			sendMoveResult(req, res, 'OK', current_game, winner);
 		}
 		else {
-			console.log('111111111');
 			res.send({ 'status': 'ERROR' });
 		}
 	});
@@ -66,7 +62,6 @@ exports.nextMove = function(req, res) {
 
 function sendMoveResult(req, res, status, game_info, winner) {
 	//winner: ' '=draw, 'X'=player, 'O'=computer, '/'=none
-	console.log("SENDING" + JSON.stringify(game_info));
 
 	if(winner == '/') {
 		game.saveCurrentGame(req.session.user, game_info, function(saved) {
@@ -224,8 +219,6 @@ function checkConsecutive(grid, index) {
 	var row = Math.floor(index/3);
 	var col = Math.floor(index%3);
 	var board = toGameBoard(grid);
-
-	console.log(row + ", " + col);
 
 	//check for vertical grids
 	if(row == 0) {
