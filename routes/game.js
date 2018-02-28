@@ -31,6 +31,7 @@ exports.listGames = function(req, res) {
                 client.close();
             }
             else {
+                console.log('22222222');
                 res.send({ 'status': 'ERROR' });
                 client.close();
             }
@@ -61,6 +62,7 @@ exports.getGame = function(req, res) {
                 client.close();
             }
             else {
+                console.log('333333333333');
                 res.send({ 'status': 'ERROR' });
                 client.close();
             }
@@ -99,6 +101,7 @@ exports.getScore = function(req, res) {
                 client.close();
             }
             else {
+                console.log('44444');
                 res.send({ 'status': 'ERROR' });
                 client.close();
             }
@@ -113,6 +116,8 @@ exports.getCurrentGame = function(user, callback) {
         var db = client.db('tictactoe');
 
         var query = { 'username': user };
+
+        console.log('cookie is~~~' + user);
         db.collection('user').findOne(query, function(err, result) {
             if(err) {
                 console.log('Unexpected error occurred when retrieving current game of user.');
@@ -125,6 +130,7 @@ exports.getCurrentGame = function(user, callback) {
                 callback(result.current_game);
             }
             else {
+                console.log('~~~~~~');
                 client.close();
                 callback(null);
             }

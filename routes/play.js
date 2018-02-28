@@ -4,6 +4,7 @@ var game = require('./game');
 exports.nextMove = function(req, res) {
 	var move = req.body.move;
 	var winner = '/';
+
 	game.getCurrentGame(req.session.user, function(current_game) {
 		if(move && current_game) {
 			//Initialize current game if no on going game exist for the user
@@ -46,10 +47,11 @@ exports.nextMove = function(req, res) {
 	
 			sendMoveResult(req, res, 'OK', current_game, winner);
 		}
-		else if(!move && current_game.grid) {
+		else if(!move && current_game) {
 			sendMoveResult(req, res, 'OK', current_game, winner);
 		}
 		else {
+			console.log('111111111');
 			res.send({ 'status': 'ERROR' });
 		}
 	});
