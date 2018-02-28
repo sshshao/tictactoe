@@ -45,7 +45,7 @@ exports.getGame = function(req, res) {
         if(err) throw err;
         var db = client.db('tictactoe');
 
-        var query = { 'games._id': new ObjectID(req.body.id) };
+        var query = { 'username': res.session.user, 'games': { $elemMatch: {'id': req.body.id} } };
         db.collection('user').findOne(query, function(err, result) {
             if(err) {
                 console.log('Unexpected error occurred when retrieving game record.');
@@ -54,6 +54,8 @@ exports.getGame = function(req, res) {
             }
 
             if(result != null) {
+                console.log("SENDING" + JSON.stringify(result));
+
                 res.send({
                     'status': 'OK',
                     'grid': result.grid,
