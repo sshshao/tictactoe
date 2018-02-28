@@ -179,12 +179,12 @@ exports.saveEndedGame = function(user, game, winner, callback) {
 
             if(user_result != null) {
                 var user_game_update = {
-                    'games': [{
+                    'games': {
                         'id': user_result.games.length + 1,
                         'start_date': game.start_date,
                         'grid': game.grid,
                         'winner': winner
-                    }]
+                    }
                 }
                 db.collection('user').updateOne(query, { $set: current_game_update, $push: user_game_update }, function(err, result) {
                     if(err) {
