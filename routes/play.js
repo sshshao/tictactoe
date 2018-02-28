@@ -1,21 +1,23 @@
 var path = require('path');
+var game = require('./game');
 
 exports.nextMove = function(req, res) {
 	var grid = req.body.grid;
+	var nive = req.body.move;
 	var winner = '/';
 
-	if(req.body.grid) {
+	if(req.body.grid && req.body.move) {
 		grid = req.body.grid;
 
 		//check result first, return if player wins
 		if(checkWinner(grid) == 'X') {
-			sendExternalResult(res, 'OK', grid, 'X');
+			sendMoveResult(req, res, 'OK', grid, 'X');
 			return;
 		}
 
 		//draw if is a dead game
 		if(isDeadGame(grid)) {
-			sendExternalResult(res, 'OK', grid, ' ');
+			sendMoveResult(req, res, 'OK', grid, ' ');
 			return;
 		}
 
@@ -34,48 +36,25 @@ exports.nextMove = function(req, res) {
 		//draw if is a dead game
 		if(isDeadGame(grid)) {
 			winner = ' ';
-			sendExternalResult(res, grid, winner);
+			sendMoveResult(res, grid, winner);
 			return;
 		}
 		*/
 
 		//winner: ' '=draw, 'X'=player, 'O'=computer, '/'=none
-		if(winner == '/') {
-			res.send({
-				'status': 'OK',
-				'grid': grid,
-			});
-		}
-		else {
-			sendExternalResult(res, 'OK', grid, winner);
-		}
+		sendMoveResult(req, res, 'OK', grid, winner);
 	}
 	else {
-		res.send({
-			'status': 'OK',
-			'grid': grid
-		});
+		sendMoveResult(req, res, 'OK', grid, winner);
 	}
 }
 
 
-exports.listGames = function(res, req) {
-	var grid = req.body.grid;
-	var move = req.body.move;
-}
+function sendMoveResult(req, res, status, grid, winner) {
+	if(winner != '/') {
+		game.recordGame(req.session.user, grid, winner);
+	}
 
-
-exports.getGame = function(res, req) {
-	var game_id = req.body.id;
-}
-
-
-exports.getScore = function(res, req) {
-	
-}
- 
-
-function sendExternalResult(res, status, grid, winner) {
 	res.send({
 		'status': status,
 		'grid': grid,

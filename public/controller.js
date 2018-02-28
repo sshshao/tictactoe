@@ -119,10 +119,6 @@ function sign_up() {
 		dataType: 'json',
 		data: account,
 		success: function(res) {
-			$('#navbar-btn-signout').show();
-			$('#navbar-btn-signin').hide();
-			$('#nav-span-or').hide();
-			$('#navbar-btn-signup').hide();
 			$('#overlay-signup').css('display', 'none');
 		}
 	});
