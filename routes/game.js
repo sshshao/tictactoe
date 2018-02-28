@@ -3,6 +3,13 @@ const mongo = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 const url = 'mongodb://localhost:27017';
 
+const current_game_update = {
+    'current_game': { 
+        grid: [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '], 
+        start_date: null
+    }
+};
+
 exports.listGames = function(req, res) {    
     mongo.connect(url, function(err, client) {
         if(err) throw err;
@@ -100,7 +107,7 @@ exports.getScore = function(req, res) {
 }
 
 /* Internal functions */
-exports.getCurrentGame = function(user) {
+exports.getCurrentGame = function(user, callback) {
     mongo.connect(url, function(err, client) {
         if(err) throw err;
         var db = client.db('tictactoe');
@@ -110,23 +117,50 @@ exports.getCurrentGame = function(user) {
             if(err) {
                 console.log('Unexpected error occurred when retrieving current game of user.');
                 client.close();
-                return null;
+                callback(null);
             }
 
             if(result != null) {
                 client.close();
-                return result.current_game;
+                callback(result.current_game);
             }
             else {
                 client.close();
-                return null;
+                callback(null);
             }
         });
     }); 
 }
 
 
-exports.recordGame = function(user, game, winner) {
+exports.saveCurrentGame = function(user, game, callback) {
+    mongo.connect(url, function(err, client) {
+        if(err) throw err;
+        var db = client.db('tictactoe');
+
+        var query = { 'username': user };
+        var user_game_update = {
+            'current_game': {
+                'start_date': game.start_date,
+                'grid': game.grid
+            }
+        }
+
+        db.collection('user').updateOne(query, { $set: user_game_update }, function(err, result) {
+            if(err) {
+                console.log('Unexpected error occurred when saving current game of user.');
+                client.close();
+                callback(false);
+            }
+
+            client.close();
+            callback(true);
+        });
+    });
+}
+
+
+exports.saveEndedGame = function(user, game, winner, callback) {
     mongo.connect(url, function(err, client) {
         if(err) throw err;
         var db = client.db('tictactoe');
@@ -140,15 +174,15 @@ exports.recordGame = function(user, game, winner) {
             }]
         }
 
-        db.collection('user').updateOne(query, { $push: user_game_update }, function(err, result) {
+        db.collection('user').updateOne(query, { $set: current_game_update, $push: user_game_update }, function(err, result) {
             if(err) {
                 console.log('Unexpected error occurred when saving game of user.');
                 client.close();
-                return false;
+                calback(false);
             }
 
             client.close();
-            return true;
+            callback(true);
         });
     });
 }

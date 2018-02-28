@@ -4,67 +4,90 @@ var game = require('./game');
 exports.nextMove = function(req, res) {
 	var move = req.body.move;
 	var winner = '/';
-	var current_game = game.getCurrentGame(req.session.user);
+	game.getCurrentGame(req.session.user, function(current_game) {
+		if(move && current_game.grid) {
+			//Initialize current game if no on going game exist for the user
+			if(current_game.start_date == null) {
+				current_game.start_date = Date.now();
+			}
+			current_game.grid[move] = 'X';
 
-	if(move && current_game.grid) {
-		//check result first, return if player wins
-		if(checkWinner(current_game.grid) == 'X') {
-			sendMoveResult(req, res, 'OK', current_game, 'X');
-			return;
-		}
+			//check result first, return if player wins
+			if(checkWinner(current_game.grid) == 'X') {
+				sendMoveResult(req, res, 'OK', current_game, 'X');
+				return;
+			}
+	
+			//draw if is a dead game
+			if(isDeadGame(current_game.grid)) {
+				sendMoveResult(req, res, 'OK', current_game, ' ');
+				return;
+			}
+	
+	
+			//computer move
+			//check if match point exists, if no, pick random grid
+			var com_move = criticalMove(current_game.grid);
+			if(com_move == -1){
+				com_move = randomMove(current_game.grid);
+			}
+			current_game.grid[com_move] = 'O';
+	
+			winner = checkWinner(current_game.grid, com_move);
 
-		//draw if is a dead game
-		if(isDeadGame(current_game.grid)) {
-			sendMoveResult(req, res, 'OK', current_game, ' ');
-			return;
-		}
-
-
-		//computer move
-		//check if match point exists, if no, pick random grid
-		var com_move = criticalMove(current_game.grid);
-		if(com_move == -1){
-			com_move = randomMove(current_game.grid);
-		}
-		current_game.grid[com_move] = 'O';
-
-		winner = checkWinner(current_game.grid, com_move);
-
-		/*
-		//draw if is a dead game
-		if(isDeadGame(current_game.grid)) {
-			winner = ' ';
+			/*
+			//draw if is a dead game
+			if(isDeadGame(current_game.grid)) {
+				winner = ' ';
+				sendMoveResult(req, res, 'OK', current_game, winner);
+				return;
+			}
+			*/
+	
 			sendMoveResult(req, res, 'OK', current_game, winner);
-			return;
 		}
-		*/
-
-		sendMoveResult(req, res, 'OK', current_game, winner);
-	}
-	else if(!move && current_game.grid) {
-		sendMoveResult(req, res, 'OK', current_game, winner);
-	}
-	else {
-		res.send({ 'status': 'ERROR' });
-	}
+		else if(!move && current_game.grid) {
+			sendMoveResult(req, res, 'OK', current_game, winner);
+		}
+		else {
+			res.send({ 'status': 'ERROR' });
+		}
+	});
 }
 
 
 function sendMoveResult(req, res, status, game_info, winner) {
 	//winner: ' '=draw, 'X'=player, 'O'=computer, '/'=none
-
-	if(winner != '/') {
-		if(!game.recordGame(req.session.user, game_info, winner)) {
-			res.send({ 'status': 'ERROR' });
-			return;
-		}
+	if(winner == '/') {
+		game.saveCurrentGame(req.session.user, game_info, function(saved) {
+			if(saved) {
+				res.send({
+					'status': status,
+					'grid': game_info.grid,
+					'winner': winner
+				});
+			}
+			else {
+				console.log('Unexpected error happened when saving the on going game.');
+				res.send({ 'status': 'ERROR' });
+			}
+		});
 	}
-
-	res.send({
-		'status': status,
-		'grid': game_info.grid,
-		'winner': winner
-	});
+	else {
+		game.saveEndedGame(req.session.user, game_info, winner, function(saved) {
+			if(saved) {
+				res.send({
+					'status': status,
+					'grid': game_info.grid,
+					'winner': winner
+				});
+			}
+			else {
+				console.log('Unexpected error happened when saving the game.');
+				res.send({ 'status': 'ERROR' });
+			}
+		});
+	}
 }
 
 
