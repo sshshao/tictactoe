@@ -31,6 +31,7 @@ exports.listGames = function(req, res) {
     });
 }
 
+
 exports.getGame = function(req, res) {
     mongo.connect(url, function(err, client) {
         if(err) throw err;
@@ -59,6 +60,7 @@ exports.getGame = function(req, res) {
         }); 
     });
 }
+
 
 exports.getScore = function(req, res) {    
     mongo.connect(url, function(err, client) {
@@ -94,9 +96,59 @@ exports.getScore = function(req, res) {
                 client.close();
             }
         });
-    })
+    });
 }
 
-exports.recordGame = function(user, grid, winner) {
+/* Internal functions */
+exports.getCurrentGame = function(user) {
+    mongo.connect(url, function(err, client) {
+        if(err) throw err;
+        var db = client.db('tictactoe');
 
+        var query = { 'username': user };
+        db.collection('user').findOne(query, function(err, result) {
+            if(err) {
+                console.log('Unexpected error occurred when retrieving current game of user.');
+                client.close();
+                return null;
+            }
+
+            if(result != null) {
+                client.close();
+                return result.current_game;
+            }
+            else {
+                client.close();
+                return null;
+            }
+        });
+    }); 
+}
+
+
+exports.recordGame = function(user, game, winner) {
+    mongo.connect(url, function(err, client) {
+        if(err) throw err;
+        var db = client.db('tictactoe');
+
+        var query = { 'username': user };
+        var user_game_update = {
+            'games': [{
+                'start_date': game.start_date,
+                'grid': game.grid,
+                'winner': winner
+            }]
+        }
+
+        db.collection('user').updateOne(query, { $push: user_game_update }, function(err, result) {
+            if(err) {
+                console.log('Unexpected error occurred when saving game of user.');
+                client.close();
+                return false;
+            }
+
+            client.close();
+            return true;
+        });
+    });
 }

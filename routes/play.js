@@ -2,62 +2,67 @@ var path = require('path');
 var game = require('./game');
 
 exports.nextMove = function(req, res) {
-	var grid = req.body.grid;
-	var nive = req.body.move;
+	var move = req.body.move;
 	var winner = '/';
+	var current_game = game.getCurrentGame(req.session.user);
 
-	if(req.body.grid && req.body.move) {
-		grid = req.body.grid;
-
+	if(move && current_game.grid) {
 		//check result first, return if player wins
-		if(checkWinner(grid) == 'X') {
-			sendMoveResult(req, res, 'OK', grid, 'X');
+		if(checkWinner(current_game.grid) == 'X') {
+			sendMoveResult(req, res, 'OK', current_game, 'X');
 			return;
 		}
 
 		//draw if is a dead game
-		if(isDeadGame(grid)) {
-			sendMoveResult(req, res, 'OK', grid, ' ');
+		if(isDeadGame(current_game.grid)) {
+			sendMoveResult(req, res, 'OK', current_game, ' ');
 			return;
 		}
 
 
 		//computer move
 		//check if match point exists, if no, pick random grid
-		var com_move = criticalMove(grid);
+		var com_move = criticalMove(current_game.grid);
 		if(com_move == -1){
-			com_move = randomMove(grid);
+			com_move = randomMove(current_game.grid);
 		}
-		grid[com_move] = 'O';
+		current_game.grid[com_move] = 'O';
 
-		winner = checkWinner(grid, com_move);
+		winner = checkWinner(current_game.grid, com_move);
 
 		/*
 		//draw if is a dead game
-		if(isDeadGame(grid)) {
+		if(isDeadGame(current_game.grid)) {
 			winner = ' ';
-			sendMoveResult(res, grid, winner);
+			sendMoveResult(req, res, 'OK', current_game, winner);
 			return;
 		}
 		*/
 
-		//winner: ' '=draw, 'X'=player, 'O'=computer, '/'=none
-		sendMoveResult(req, res, 'OK', grid, winner);
+		sendMoveResult(req, res, 'OK', current_game, winner);
+	}
+	else if(!move && current_game.grid) {
+		sendMoveResult(req, res, 'OK', current_game, winner);
 	}
 	else {
-		sendMoveResult(req, res, 'OK', grid, winner);
+		res.send({ 'status': 'ERROR' });
 	}
 }
 
 
-function sendMoveResult(req, res, status, grid, winner) {
+function sendMoveResult(req, res, status, game_info, winner) {
+	//winner: ' '=draw, 'X'=player, 'O'=computer, '/'=none
+
 	if(winner != '/') {
-		game.recordGame(req.session.user, grid, winner);
+		if(!game.recordGame(req.session.user, game_info, winner)) {
+			res.send({ 'status': 'ERROR' });
+			return;
+		}
 	}
 
 	res.send({
 		'status': status,
-		'grid': grid,
+		'grid': game_info.grid,
 		'winner': winner
 	});
 }
