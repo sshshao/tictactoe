@@ -2,6 +2,8 @@ var path = require('path');
 var game = require('./game');
 
 exports.nextMove = function(req, res) {
+	console.log("===REQUEST:" + JSON.stringify(req.body));
+	
 	var move = req.body.move;
 	var winner = '/';
 
