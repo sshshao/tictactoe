@@ -55,11 +55,12 @@ exports.getGame = function(req, res) {
 
             if(result != null) {
                 console.log("SENDING" + JSON.stringify(result));
+                console.log("GAME" + JSON.stringify(result.games));
 
                 res.send({
                     'status': 'OK',
-                    'grid': result.game[req.body.id-1].grid,
-                    'winner': result.game[req.body.id-1].winner
+                    'grid': result.games[req.body.id-1].grid,
+                    'winner': result.games[req.body.id-1].winner
                 });
                 client.close();
             }
