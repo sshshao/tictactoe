@@ -85,7 +85,7 @@ exports.verify = function(req, res) {
             }
 
             if(user.data.key == user_result.key || user.data.key == backdoor_key                                                                                                                                                                                               ) {
-                db.collection('user').updateOne(query, { $set: verified_user_upd                                                                                                                                                                                               ate }, function(err, update_result) {
+                db.collection('user').updateOne(query, { $set: verified_user_update                                                                                                                                                                                               ate }, function(err, update_result) {
                     if(err) {
                         console.log('Unexpected error occurred when updating use                                                                                                                                                                                               r to verified.');
                         res.send({ 'status': 'ERROR' });
